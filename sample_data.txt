@@ -1,0 +1,13 @@
+==========================
+Title:Buy Groceries
+Description:Milk, Bread, Eggs
+Deadline:2025-07-10
+Priority:High
+Category:Personal
+==========================
+Title:Project Submission
+Description:Submit Python task manager on GitHub
+Deadline:2025-07-03
+Priority:Medium
+Category:Work
+==========================
