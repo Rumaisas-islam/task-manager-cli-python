@@ -1,3 +1,4 @@
+![Task Manager Banner](banner.png)
 # 📝 Task Manager CLI Application
 
 ![Python](https://img.shields.io/badge/Python-3.10+-blue?style=for-the-badge&logo=python)
