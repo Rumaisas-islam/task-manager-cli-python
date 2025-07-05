@@ -5,6 +5,8 @@
 ![Status](https://img.shields.io/badge/Status-Working-green?style=for-the-badge)
 ![License](https://img.shields.io/badge/License-MIT-lightgrey?style=for-the-badge)
 ![Contributions](https://img.shields.io/badge/Contributions-Welcome-ff69b4?style=for-the-badge)
+![Release](https://img.shields.io/github/v/release/Rumaisas-islam/task-manager-cli-python?style=for-the-badge)
+
 
 > A simple yet powerful terminal-based Task Manager written in Python. Organize, search, update, and delete your daily tasks efficiently using categories, deadlines, and priorities.
 
