@@ -1,4 +1,3 @@
-==========================
 Title:Buy Groceries
 Description:Milk, Bread, Eggs
 Deadline:2025-07-10

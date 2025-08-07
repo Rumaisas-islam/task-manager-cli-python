@@ -56,13 +56,12 @@ Task added successfully!
 
 Enter what you want to do
 1.add_task
-2.search_by_title
-3.search_by_category
-4.search_by_deadlinedate
-5.delete_task_by_title
-6.update_task_by_title
-7.list_all_titles
-8.print_all_tasks
+2.search_task
+3.delete_task
+4.update_task
+5.list_all_titles
+6.print_all_tasks
+7.exit
 ````
 
 ---
@@ -84,7 +83,6 @@ python task_manager.py
 ## 📁 Sample Task Entry Format
 
 ```
-==========================
 Title:Buy Groceries
 Description:Milk, Bread, Eggs
 Deadline:2025-07-10

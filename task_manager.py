@@ -1,237 +1,253 @@
+from pathlib import Path
+
+
 import re
 import datetime
-class Task_Manager:
-  def __init__(self,filename="data.txt"):
-    self.filename=filename 
-  def add_task(self):
-    print("====Welcome to task manager====")
-    title=input("Enter title: ")
-    description=input("Enter description: ")
-    while True:
-      deadlinedate=input("Enter deadline date(YYYY-MM-DD): ")
-      try:
-        datetime.datetime.strptime(deadlinedate, "%Y-%m-%d")
-        break 
-      except ValueError:
-        print("❌ Invalid date format. Try again.")
-    while True:
-      priority=input("Enter priority(High/Medium/Low): ").capitalize()
-      if priority in["High","Medium","Low"]:
-        break
-      else:
-        print("❌ Invalid priority. Please choose High, Medium, or Low.")
-    category=input("Enter category: ")
-    try:
-      with open(self.filename,"a") as f:
-        f.write("==========================\n")
-        f.write(f"Title:{title}\n")
-        f.write(f"Description:{description}\n")
-        f.write(f"Deadline:{deadlinedate}\n")
-        f.write(f"Priority:{priority}\n")
-        f.write(f"Category:{category}\n")
-        f.write("==========================\n")
-    except Exception as e:
-      print(f"Error saving task:{e}")
-  def search_by_title(self):
-    try:
-      with open(self.filename,"r") as f:
-        lines=f.readlines()
-    except FileNotFoundError:
-      print("No file found")
-      return
-    title=input("Enter the title: ")
-    pattern = rf"^Title:\s*{re.escape(title)}"
-    found=False
-    for i,line in enumerate(lines):
-      if re.search(pattern,line,re.IGNORECASE):
-        for j in range(i-1,i+7):
-          if 0<=j<len(lines):
-            print(lines[j].strip())
-        found=True 
-        break 
-    if not found:
-      print("No task found with that title")
-  def search_by_category(self):
-    try:
-      with open(self.filename,"r") as f:
-        lines=f.readlines()
-    except FileNotFoundError:
-      print("No file found")
-      return 
-    category=input("Enter category: ")
-    pattern = rf"^Category:\s*{re.escape(category)}"
-    found=False
-    for i,line in enumerate(lines):
-      if re.search(pattern,line,re.IGNORECASE):
-        for j in range(i-1,i+7):
-          if 0<=j<len(lines):
-            print(lines[j].strip())
-        found=True 
-        break 
-    if not found:
-      print("No task found for that category")
-  def search_by_deadlinedate(self):
-    try:
-      with open(self.filename,"r") as f:
-        lines=f.readlines()
-    except FileNotFoundError:
-      print("No file found ")
-      return 
-    while True:
-      deadlinedate=input("Enter the date: ")
-      try:
-        datetime.datetime.strptime(deadlinedate, "%Y-%m-%d")
-        break 
-      except ValueError:
-        print("❌ Invalid date format. Try again.")
-    pattern = rf"^Deadline:\s*{re.escape(deadlinedate)}" 
-    found=False 
-    for i,line in enumerate(lines):
-      if re.search(pattern,line,re.IGNORECASE):
-        for j in range(i-1,i+7):
-          if 0<=j<len(lines):
-            print(lines[j].strip())
-        found=True
-        break 
-    if not found:
-      print("NO file found")
-  def delete_task_by_title(self):
-    title=input("Enter title: ")
-    new_lines=[]
-    pattern = rf"^Title:\s*{re.escape(title)}"
-    found=False 
-    try:
-      with open(self.filename,"r") as f:
-        lines=f.readlines()
-    except FileNotFoundError:
-      print("No file found")
-      return
-    i=0
-    while i<len(lines):
-      line=lines[i]
-      if re.search(pattern,line,re.IGNORECASE):
-        found=True
-        while i>0 and lines[i-1].startswith("="):
-          i-=1 
-        while i<len(lines) and not lines[i].startswith("="):
-          i+=1 
-        if i<len(lines):
-          i+=1 
-      else:
-        new_lines.append(line)
-        i+=1 
-    if found:
-      with open(self.filename,"w") as f:
-        f.write("".join(new_lines))
-      print("Task deleted successfully")
-    else:
-      print("No task found with that title")
-  def update_task_by_title(self):
-    title=input("Enter the title: ")
-    pattern = rf"^Title:\s*{re.escape(title)}"
-    found=False
-    new_lines=[]
-    try:
-      with open(self.filename,"r") as f:
-        lines=f.readlines()
-    except FileNotFoundError:
-      print("No file found")
-      return
-    i=0
-    while i < len(lines):
-      line=lines[i]
-      if re.search(pattern,line,re.IGNORECASE):
-        found=True 
-        while i > 0 and not lines[i-1].startswith("=========================="):
-          i-=1 
-        while i < len(lines) and not lines[i].startswith("=========================="):
-          i+=1 
-        if i < len(lines):
-          i+=1 
-        
-        new_title=input("Enter the title: ")
-        new_description=input("Enter the description: ")
-        while True:
-          new_deadlinedate=input("Enter the deadline: ")
-          try:
-            datetime.datetime.strptime(new_deadlinedate, "%Y-%m-%d")
-            break
-          except ValueError:
-            print("❌ Invalid date format. Try again.")
-        new_category=input("Enter the category: ")
-        while True:
-          new_priority=input("Enter the priority(High/Medium/Low): ")
-          if new_priority in["High","Medium","Low"]:
-            break 
-          else:
-            print("❌ Invalid priority. Please choose High, Medium, or Low.")
-        new_lines.append("==========================\n")
-        new_lines.append(f"Title:{new_title}\n")
-        new_lines.append(f"Description:{new_description}\n")
-        new_lines.append(f"Deadline:{new_deadlinedate}\n")
-        new_lines.append(f"Priority:{new_priority}\n")
-        new_lines.append(f"Category:{new_category}\n")
-        new_lines.append("==========================\n")
 
-      else:
-        new_lines.append(line)
-        i+=1
-    if found:
-      with open(self.filename,"w") as f:
-        f.write("".join(new_lines))
-      print("Task updated successfully")
-    else:
-      print("No file found")
-  def list_all_titles(self):
-    try:
-      with open(self.filename,"r") as f:
-        lines=f.readlines()
-    except FileNotFoundError:
-      print("No file found")
-      return
-    titles=[line.strip().replace("Title:","") for line in lines if line.startswith("Title:")]
-    if titles:
-      print("----All saved Titles----\n")
-      for idx,title in enumerate(titles,1):
-        print([idx],[title])
-      print("-------------------\n")
-    else:
-      print("No task found")
-  def print_all_tasks(self):
-    try:
-      with open(self.filename,"r") as f:
-        content=f.read().strip()
-        print("\n --------All Saved Task-------- \n")
-        parts=re.findall(r"=+\n(.*?)\n=+", content, re.DOTALL) 
-        if parts: 
-          for i,part in enumerate(parts,1):
-              print(f"Task{i}")
-              print(part.strip())
-              print()
+class TaskManager:
+    def __init__(self, filename="data.txt"):
+        self.filename = filename
+
+    def create_backup(self):
+        import shutil
+        backup_file = self.filename.replace(".txt", "_backup.txt")
+        shutil.copy(self.filename, backup_file)
+        print(f"📁 Backup created as: {backup_file}")
+
+    def add_task(self):
+        print("==== Welcome to Task Manager ====")
+        title = input("Enter title: ").strip()
+        description = input("Enter description: ").strip()
+        while True:
+            deadline = input("Enter deadline (YYYY-MM-DD): ").strip()
+            try:
+                datetime.datetime.strptime(deadline, "%Y-%m-%d")
+                break
+            except ValueError:
+                print("❌ Invalid date format. Try again.")
+        while True:
+            priority = input("Enter priority (High/Medium/Low): ").capitalize()
+            if priority in ["High", "Medium", "Low"]:
+                break
+            else:
+                print("❌ Invalid priority. Choose High, Medium, or Low.")
+        category = input("Enter category: ").strip()
+        try:
+            with open(self.filename, "a", encoding="utf-8") as f:
+                
+                f.write(f"Title:{title}\n")
+                f.write(f"Description:{description}\n")
+                f.write(f"Deadline:{deadline}\n")
+                f.write(f"Priority:{priority}\n")
+                f.write(f"Category:{category}\n")
+                f.write("==========================\n")
+        except Exception as e:
+            print(f"Error saving task: {e}")
+
+    def search_task(self, field):
+      try:
+          with open(self.filename, "r", encoding="utf-8") as f:
+              lines = f.readlines()
+      except FileNotFoundError:
+          print("No file found")
+          return
+
+      value = input(f"Enter the {field.lower()} to search task: ").strip()
+      pattern = rf"^{re.escape(field)}:\s*{re.escape(value)}$"
+      found = False
+      block = []
+
+      for line in lines:
+          if line.strip() == "==========================":
+              # Check current block before resetting
+              if any(re.match(pattern, l.strip(), re.IGNORECASE) for l in block):
+                  print("\n".join(block))
+                  print("========================")
+                  found = True
+              block = []
+          else:
+              block.append(line.strip())
+
+    # ✅ Also check last block if file doesn't end with ========================
+      if block:
+          if any(re.match(pattern, l.strip(), re.IGNORECASE) for l in block):
+              print("\n".join(block))
+              print("========================")
+              found = True
+
+      if not found:
+          print(f"No contact found with that {field.lower()}.")
+
+
+    def delete_task(self):
+        try:
+            with open(self.filename, "r", encoding="utf-8") as f:
+                lines = f.readlines()
+        except FileNotFoundError:
+            print("⚠️ No file found")
+            return
+        value = input("Enter title to delete task: ").strip()
+        pattern = rf"^Title:\s*{re.escape(value)}"
+        new_lines, block = [], []
+        found_any = False
+
+        for line in lines:
+            if line.strip() == "==========================":
+                if any(re.search(pattern, l, re.IGNORECASE) for l in block):
+                    print("\n🔍 Matched Task Record:")
+                    print("".join(block))
+                    confirm = input("Do you want to delete this task? (yes/no): ").strip().lower()
+                    if confirm == "yes":
+                        self.create_backup()
+                        found_any = True
+                        # skip
+                    else:
+                        new_lines.extend(block + ["==========================\n"])
+                else:
+                    new_lines.extend(block + ["==========================\n"])
+                block = []
+            else:
+                block.append(line)
+
+        if found_any:
+            with open(self.filename, "w", encoding="utf-8") as f:
+                f.writelines(new_lines)
+            print("✅ Selected task(s) deleted.")
         else:
-          print("No task found")
-    except FileNotFoundError:
-      print("No file found")
+            print("❌ No task found with that title.")
+
+    def update_task(self):
+        try:
+            with open(self.filename, "r", encoding="utf-8") as f:
+                lines = f.readlines()
+        except FileNotFoundError:
+            print("⚠️ No file found")
+            return
+        value = input("Enter title to update task: ").strip()
+        pattern = rf"^Title:\s*{re.escape(value)}"
+        new_lines, block = [], []
+        found_any = False
+
+        for line in lines:
+            if line.strip() == "==========================":
+                if any(re.search(pattern, l, re.IGNORECASE) for l in block):
+                    print("\n🔍 Matched Task Record:")
+                    print("".join(block))
+                    confirm = input("Do you want to update this task? (yes/no): ").strip().lower()
+                    if confirm == "yes":
+                        self.create_backup()
+                        found_any = True
+                        new_title = input("Enter new title: ")
+                        new_description = input("Enter new description: ")
+                        while True:
+                            new_deadline = input("Enter deadline (YYYY-MM-DD): ").strip()
+                            try:
+                                datetime.datetime.strptime(new_deadline, "%Y-%m-%d")
+                                break
+                            except ValueError:
+                                print("❌ Invalid date format.")
+                        while True:
+                            new_priority = input("Enter priority (High/Medium/Low): ").capitalize()
+                            if new_priority in ["High", "Medium", "Low"]:
+                                break
+                            else:
+                                print("❌ Invalid priority.")
+                        new_category = input("Enter category: ")
+                        
+                        new_lines.append(f"Title:{new_title}\n")
+                        new_lines.append(f"Description:{new_description}\n")
+                        new_lines.append(f"Deadline:{new_deadline}\n")
+                        new_lines.append(f"Priority:{new_priority}\n")
+                        new_lines.append(f"Category:{new_category}\n")
+                        new_lines.append("==========================\n")
+                    else:
+                        new_lines.extend(block + ["==========================\n"])
+                else:
+                    new_lines.extend(block + ["==========================\n"])
+                block = []
+            else:
+                block.append(line)
+
+        if found_any:
+            with open(self.filename, "w", encoding="utf-8") as f:
+                f.writelines(new_lines)
+            print("✅ Task(s) updated successfully.")
+        else:
+            print("❌ No matching task found.")
+
+    def list_titles(self):
+        try:
+            with open(self.filename, "r", encoding="utf-8") as f:
+                lines = f.readlines()
+        except FileNotFoundError:
+            print("⚠️ No file found")
+            return
+        titles = [line.strip().replace("Title:", "") for line in lines if line.startswith("Title:")]
+        if titles:
+            print("📋 All Titles:")
+            for idx, title in enumerate(titles, 1):
+                print(f"{idx}. {title}")
+        else:
+            print("No titles found.")
+
+    def print_all_tasks(self):
+      try:
+          with open(self.filename, "r", encoding="utf-8") as f:
+              lines = f.readlines()
+      except FileNotFoundError:
+          print("⚠️ No file found")
+          return
+
+      block = []
+      task_num = 1
+      found = False
+
+      for line in lines:
+          if line.strip() == "==========================":
+              if block:
+                  print(f"\nTask {task_num}:")
+                  print("".join(block).strip())
+                  task_num += 1
+                  found = True
+              block = []
+          else:
+              block.append(line)
+
+      if not found:
+          print("No task found.")
+
+
 if __name__ == "__main__":
-  obj=Task_Manager()
-  while True:
-    menu=input("Enter what you want to do\n1.add_task\n2.search_by_title\n3.search_by_category\n4.search_by_deadlinedate\n5.delete_task_by_title\n6.update_task_by_title\n7.list_all_titles\n8.print_all_tasks\n(1/2/3/4/5/6/7/8) or 'q' to quit: ")
-    
-    if menu == "1":
-      obj.add_task()
-    elif menu == "2":
-      obj.search_by_title()
-    elif menu == "3":
-      obj.search_by_category()
-    elif menu == "4":
-      obj.search_by_deadlinedate()
-    elif menu == "5":
-      obj.delete_task_by_title()
-    elif menu == "6":
-      obj.update_task_by_title()
-    elif menu == "7":
-      obj.list_all_titles()
-    elif menu == "8":
-      obj.print_all_tasks()
-    elif menu.lower() == "q":
-      break
+    obj = TaskManager()
+    while True:
+        print("\n===== Task Manager Menu =====")
+        print("1. Add Task")
+        print("2. Search Task")
+        print("3. Delete Task ")
+        print("4. Update Task ")
+        print("5. List All Titles")
+        print("6. Print All Tasks")
+        print("7. Exit")
+        choice = input("Enter your choice (1-7): ").strip()
+
+        if choice == "1":
+            obj.add_task()
+        elif choice == "2":
+            print("Make sure write (Title//Category) otherwise it does not work")
+            print()
+            field = input("Search by (Title//Category): ").strip().capitalize()
+            obj.search_task(field)
+        elif choice == "3":
+            obj.delete_task()
+        elif choice == "4":
+            obj.update_task()
+        elif choice == "5":
+            obj.list_titles()
+        elif choice == "6":
+            obj.print_all_tasks()
+        elif choice == "7":
+            print("👋 Exiting Task Manager. Goodbye!")
+            break
+        else:
+            print("❌ Invalid input. Try again.")
+
